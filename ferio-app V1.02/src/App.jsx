@@ -4,7 +4,7 @@ import {
   X, Download, Share2, Check, ShieldAlert, Wifi, Signal, BatteryFull,
   Delete, Search, Clock3, ArrowDownLeft, ArrowUpRight, Sparkles,
   Settings, User, CreditCard, MessageCircle, Bot, Plus, LogOut, ChevronDown,
-  Landmark, Lock, Star, Camera, RotateCcw, CheckCircle2
+  Landmark, Lock, Star, Camera, RotateCcw, CheckCircle2, Pencil
 } from "lucide-react";
 
 const C = {
@@ -132,17 +132,20 @@ function GhostButton({ children, onClick, icon }) {
 function Keypad({ onDigit, onBack, allowDot, onDot }) {
   const keys = ["1","2","3","4","5","6","7","8","9", allowDot ? "." : "", "0", "back"];
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>
+    <div style={{
+      display: "grid", gridTemplateColumns: "repeat(3, 68px)", gap: "14px 22px",
+      justifyContent: "center", margin: "0 auto"
+    }}>
       {keys.map((k, i) => {
         if (k === "") return <div key={i} />;
         if (k === "back") {
           return (
             <button key={i} onClick={onBack} style={{
-              height: 56, borderRadius: 14, border: `1px solid ${C.borderSoft}`,
-              background: C.card, color: C.redSoft, display: "flex",
+              width: 68, height: 68, borderRadius: "50%", border: "none",
+              background: "transparent", color: C.redSoft, display: "flex",
               alignItems: "center", justifyContent: "center", cursor: "pointer"
             }}>
-              <Delete size={20} />
+              <Delete size={22} />
             </button>
           );
         }
@@ -151,10 +154,10 @@ function Keypad({ onDigit, onBack, allowDot, onDot }) {
             key={i}
             onClick={() => k === "." ? onDot() : onDigit(k)}
             style={{
-              height: 56, borderRadius: 14, border: `1px solid ${C.borderSoft}`,
+              width: 68, height: 68, borderRadius: "50%", border: `1px solid ${C.borderSoft}`,
               background: C.card, color: C.text,
-              fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: 20,
-              cursor: "pointer"
+              fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: 22,
+              cursor: "pointer", boxShadow: "0 1px 3px rgba(0,0,0,0.04)"
             }}
           >{k}</button>
         );
@@ -398,10 +401,8 @@ function ScreenFaceId({ onNext, onBack }) {
   );
 }
 
-function ScreenRegister({ phone, setPhone, nombre, setNombre, apPaterno, setApPaterno, apMaterno, setApMaterno, onContinue, onGoogle, onEmail }) {
-  const digits = phone.length;
+function ScreenRegisterName({ nombre, setNombre, apPaterno, setApPaterno, apMaterno, setApMaterno, onContinue }) {
   const nameOk = nombre.trim().length > 1 && apPaterno.trim().length > 1 && apMaterno.trim().length > 1;
-  const valid = digits === 10 && nameOk;
   return (
     <div style={{ padding: "8px 24px 28px", display: "flex", flexDirection: "column", height: "100%" }}>
       <div style={{ marginTop: 18, marginBottom: 24 }}>
@@ -412,9 +413,9 @@ function ScreenRegister({ phone, setPhone, nombre, setNombre, apPaterno, setApPa
         <h1 style={{
           fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 26,
           color: C.text, lineHeight: 1.25, margin: "0 0 8px"
-        }}>Tu número es<br />tu cuenta.</h1>
+        }}>Cuéntanos<br />quién eres.</h1>
         <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: C.textMuted, margin: 0, lineHeight: 1.5 }}>
-          Regístrate con tu celular para enviar y recibir dinero al instante en todo México.
+          Empecemos por tu nombre completo, tal como aparece en tus cuentas bancarias.
         </p>
       </div>
 
@@ -424,6 +425,28 @@ function ScreenRegister({ phone, setPhone, nombre, setNombre, apPaterno, setApPa
         apMaterno={apMaterno} setApMaterno={setApMaterno}
       />
 
+      <div style={{ flex: 1 }} />
+      <PrimaryButton disabled={!nameOk} onClick={onContinue}>
+        Continuar <ChevronRight size={17} />
+      </PrimaryButton>
+    </div>
+  );
+}
+
+function ScreenRegisterPhone({ phone, setPhone, onContinue, onGoogle, onEmail }) {
+  const digits = phone.length;
+  return (
+    <div style={{ padding: "8px 24px 28px", display: "flex", flexDirection: "column", height: "100%" }}>
+      <div style={{ marginTop: 18, marginBottom: 26 }}>
+        <h1 style={{
+          fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 26,
+          color: C.text, lineHeight: 1.25, margin: "0 0 8px"
+        }}>Tu número es<br />tu cuenta.</h1>
+        <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: C.textMuted, margin: 0, lineHeight: 1.5 }}>
+          Regístrate con tu celular para enviar y recibir dinero al instante en todo México.
+        </p>
+      </div>
+
       <label style={{
         fontFamily: "'Inter', sans-serif", fontSize: 12, color: C.textMuted,
         marginBottom: 8, display: "block", fontWeight: 500
@@ -431,7 +454,7 @@ function ScreenRegister({ phone, setPhone, nombre, setNombre, apPaterno, setApPa
       <div style={{
         display: "flex", alignItems: "center", gap: 10, background: C.card,
         border: `1px solid ${digits === 10 ? C.green : C.border}`, borderRadius: 14,
-        padding: "14px 16px", marginBottom: 10, transition: "border-color .2s"
+        padding: "14px 16px", marginBottom: 22, transition: "border-color .2s"
       }}>
         <span style={{
           fontFamily: "'IBM Plex Mono', monospace", fontSize: 16, color: C.greenSoft,
@@ -446,14 +469,16 @@ function ScreenRegister({ phone, setPhone, nombre, setNombre, apPaterno, setApPa
         <Phone size={16} color={C.textMuted} />
       </div>
 
-      <div style={{ marginBottom: 18 }}>
+      <div style={{ marginBottom: 22 }}>
         <Keypad
           onDigit={(d) => phone.length < 10 && setPhone(phone + d)}
           onBack={() => setPhone(phone.slice(0, -1))}
         />
       </div>
 
-      <PrimaryButton disabled={!valid} onClick={onContinue}>
+      <div style={{ flex: 1 }} />
+
+      <PrimaryButton disabled={digits !== 10} onClick={onContinue}>
         Continuar <ChevronRight size={17} />
       </PrimaryButton>
 
@@ -488,15 +513,13 @@ function ScreenRegister({ phone, setPhone, nombre, setNombre, apPaterno, setApPa
   );
 }
 
-function ScreenForcePhone({ phone, setPhone, nombre, setNombre, apPaterno, setApPaterno, apMaterno, setApMaterno, onContinue, note }) {
+function ScreenForcePhone({ phone, setPhone, onContinue, note }) {
   const digits = phone.length;
-  const nameOk = nombre.trim().length > 1 && apPaterno.trim().length > 1 && apMaterno.trim().length > 1;
-  const valid = digits === 10 && nameOk;
   return (
     <div style={{ padding: "8px 24px 28px", display: "flex", flexDirection: "column", height: "100%" }}>
       <div style={{
         background: C.card, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.red}`,
-        borderRadius: 12, padding: "12px 14px", marginBottom: 22, marginTop: 14
+        borderRadius: 12, padding: "12px 14px", marginBottom: 26, marginTop: 14
       }}>
         <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: C.text, margin: 0, lineHeight: 1.5 }}>
           {note}
@@ -505,23 +528,16 @@ function ScreenForcePhone({ phone, setPhone, nombre, setNombre, apPaterno, setAp
 
       <h1 style={{
         fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 22,
-        color: C.text, lineHeight: 1.3, margin: "0 0 16px"
-      }}>Faltan un par de datos</h1>
-
-      <NameFields
-        nombre={nombre} setNombre={setNombre}
-        apPaterno={apPaterno} setApPaterno={setApPaterno}
-        apMaterno={apMaterno} setApMaterno={setApMaterno}
-      />
-
-      <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: C.textMuted, margin: "0 0 10px" }}>
-        Tu número celular es obligatorio: será tu identificador único para recibir y enviar dinero en ferio.
+        color: C.text, lineHeight: 1.3, margin: "0 0 8px"
+      }}>Falta un paso:<br />tu número celular</h1>
+      <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: C.textMuted, margin: "0 0 22px" }}>
+        Es obligatorio: será tu identificador único para recibir y enviar dinero en ferio.
       </p>
 
       <div style={{
         display: "flex", alignItems: "center", gap: 10, background: C.card,
         border: `1px solid ${digits === 10 ? C.green : C.border}`, borderRadius: 14,
-        padding: "14px 16px", marginBottom: 18
+        padding: "14px 16px", marginBottom: 22
       }}>
         <span style={{
           fontFamily: "'IBM Plex Mono', monospace", fontSize: 16, color: C.greenSoft,
@@ -532,7 +548,7 @@ function ScreenForcePhone({ phone, setPhone, nombre, setNombre, apPaterno, setAp
         </span>
       </div>
 
-      <div style={{ marginBottom: 18 }}>
+      <div style={{ marginBottom: 22 }}>
         <Keypad
           onDigit={(d) => phone.length < 10 && setPhone(phone + d)}
           onBack={() => setPhone(phone.slice(0, -1))}
@@ -540,8 +556,8 @@ function ScreenForcePhone({ phone, setPhone, nombre, setNombre, apPaterno, setAp
       </div>
 
       <div style={{ flex: 1 }} />
-      <PrimaryButton disabled={!valid} onClick={onContinue}>
-        Confirmar datos <ChevronRight size={17} />
+      <PrimaryButton disabled={digits !== 10} onClick={onContinue}>
+        Confirmar número <ChevronRight size={17} />
       </PrimaryButton>
     </div>
   );
@@ -721,27 +737,41 @@ function ScreenHome({ userName, balance, hideBalance, setHideBalance, movements,
 
       <div style={{ padding: "20px 22px 0" }}>
         <div style={{
-          position: "relative", overflow: "hidden", borderRadius: 22, padding: "22px 20px",
+          position: "relative", overflow: "hidden", borderRadius: 24, padding: "24px 22px",
           background: `linear-gradient(150deg, #D9603A 0%, #FB8258 55%, #FDAF8C 100%)`,
+          boxShadow: "0 22px 44px -16px rgba(217,96,58,0.55), inset 0 1px 0 rgba(255,255,255,0.25)",
         }}>
-          <svg width="150" height="150" viewBox="0 0 150 150" style={{ position: "absolute", top: -20, right: -30, opacity: 0.3 }}>
-            <circle cx="75" cy="75" r="74" fill="none" stroke="#FFF7EF" strokeWidth="0.7" />
-            <circle cx="75" cy="75" r="55" fill="none" stroke="#FFF7EF" strokeWidth="0.7" />
-            <path d="M20 75 H60 M90 75 H130 M75 20 V60 M75 90 V130" stroke="#FFF7EF" strokeWidth="0.7" />
-          </svg>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative" }}>
-            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "#FFE4D3", fontWeight: 500 }}>Saldo disponible</span>
-            <button onClick={() => setHideBalance(!hideBalance)} style={{ background: "none", border: "none", cursor: "pointer" }}>
-              {hideBalance ? <EyeOff size={16} color="#FFE4D3" /> : <Eye size={16} color="#FFE4D3" />}
-            </button>
-          </div>
+          <div style={{
+            position: "absolute", inset: 0, borderRadius: 24, pointerEvents: "none",
+            background: "linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 45%)"
+          }} />
+
+          <img
+            src={LOGO_URI} alt=""
+            style={{
+              position: "absolute", top: -30, right: -30, width: 150, height: 150,
+              opacity: 0.24, pointerEvents: "none"
+            }}
+          />
+
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "#FFE4D3", fontWeight: 500, position: "relative" }}>Saldo disponible</span>
+
           <p style={{
             fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: 34, color: "#FFFFFF",
-            margin: "6px 0 2px", position: "relative", letterSpacing: -0.5
+            margin: "6px 0 18px", position: "relative", letterSpacing: -0.5
           }}>
             {hideBalance ? "$ •••••.••" : `$ ${formatMoney(balance)}`}
           </p>
-          <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: "#FFD3B8", margin: 0, position: "relative" }}>MXN</p>
+
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative" }}>
+            <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: "#FFD3B8" }}>MXN</span>
+            <button onClick={() => setHideBalance(!hideBalance)} style={{
+              background: "rgba(255,255,255,0.18)", border: "none", borderRadius: 10,
+              width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer"
+            }}>
+              {hideBalance ? <EyeOff size={15} color="#FFE4D3" /> : <Eye size={15} color="#FFE4D3" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -769,10 +799,10 @@ function ScreenHome({ userName, balance, hideBalance, setHideBalance, movements,
           background: C.card, cursor: "pointer"
         }}>
           <div style={{
-            width: 40, height: 40, borderRadius: 12, background: C.redDeep,
+            width: 40, height: 40, borderRadius: 12, background: "#FDE4D3",
             display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
           }}>
-            <Send size={17} color={C.redSoft} />
+            <Send size={17} color={C.green} />
           </div>
           <div>
             <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 14, color: C.text, margin: 0 }}>Enviar dinero</p>
@@ -847,11 +877,11 @@ function ScreenReceive({ userName, phone, onBack }) {
   );
 }
 
-function ScreenProfile({ userName, phone, onBack }) {
+function ScreenProfile({ userName, phone, email, onBack }) {
   const rows = [
     ["Nombre completo", userName],
     ["Número celular", `+52 ${maskPhone(phone)}`],
-    ["Correo", "mariana.torres@correo.com"],
+    ["Correo", email],
     ["Cuenta verificada", "Sí"],
   ];
   return (
@@ -927,15 +957,17 @@ function TextInput(props) {
   );
 }
 
-function ScreenCardsHub({ bankAccounts, cards, onAddBank, onAddCard, onEditCard, onBack }) {
+function ScreenCardsHub({ bankAccounts, cards, onAddBank, onEditBank, onAddCard, onEditCard, onToggleFavorite, onBack }) {
+  const hasBank = bankAccounts.length > 0;
+  const [showAssocPopup, setShowAssocPopup] = useState(false);
   return (
-    <div style={{ padding: "8px 24px 28px", display: "flex", flexDirection: "column", height: "100%", overflowY: "auto" }}>
+    <div style={{ padding: "8px 24px 28px", display: "flex", flexDirection: "column", height: "100%", overflowY: "auto", position: "relative" }}>
       <TopNav title="Mis tarjetas" onBack={onBack} />
 
       <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 500, color: C.textMuted, margin: "10px 0 10px" }}>
         Cuenta para depósito (CLABE)
       </p>
-      {bankAccounts.length === 0 ? (
+      {!hasBank ? (
         <div style={{
           border: `1px dashed ${C.border}`, borderRadius: 16, padding: "18px 16px",
           display: "flex", alignItems: "center", gap: 12, marginBottom: 10
@@ -959,10 +991,17 @@ function ScreenCardsHub({ bankAccounts, cards, onAddBank, onAddCard, onEditCard,
               <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: C.textMuted, margin: "2px 0 0" }}>•••• •••• {b.clabe.slice(-4)}</p>
             </div>
             <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10.5, color: C.greenSoft, background: C.greenDeeper, padding: "3px 8px", borderRadius: 999, flexShrink: 0 }}>Depósito</span>
+            <button onClick={() => onEditBank(i)} style={{
+              width: 30, height: 30, borderRadius: 9, border: `1px solid ${C.border}`,
+              background: C.cardAlt, display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer", flexShrink: 0
+            }}>
+              <Pencil size={13} color={C.textMuted} />
+            </button>
           </div>
         ))
       )}
-      {bankAccounts.length === 0 ? (
+      {!hasBank ? (
         <button onClick={onAddBank} style={{
           width: "100%", padding: "11px", borderRadius: 12, border: `1px solid ${C.border}`,
           background: "transparent", color: C.greenSoft, fontFamily: "'Inter', sans-serif",
@@ -990,10 +1029,9 @@ function ScreenCardsHub({ bankAccounts, cards, onAddBank, onAddCard, onEditCard,
         </div>
       ) : (
         cards.map((c, i) => (
-          <button key={i} onClick={() => onEditCard(i)} style={{
-            width: "100%", background: C.card, border: `1px solid ${c.favorite ? C.red : C.border}`, borderRadius: 16,
-            padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, marginBottom: 10, cursor: "pointer",
-            textAlign: "left"
+          <div key={i} style={{
+            background: C.card, border: `1px solid ${c.favorite ? C.red : C.border}`, borderRadius: 16,
+            padding: "14px 16px", display: "flex", alignItems: "center", gap: 12, marginBottom: 10
           }}>
             <div style={{ width: 40, height: 40, borderRadius: 12, background: C.redDeep, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               <CreditCard size={18} color={C.redSoft} />
@@ -1002,17 +1040,66 @@ function ScreenCardsHub({ bankAccounts, cards, onAddBank, onAddCard, onEditCard,
               <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 13, color: C.text, margin: 0 }}>{c.brand} •••• {c.number.slice(-4)}</p>
               <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: C.textMuted, margin: "2px 0 0" }}>Vence {c.expiry}</p>
             </div>
-            {c.favorite && <Star size={16} color={C.red} fill={C.red} style={{ flexShrink: 0 }} />}
-            <ChevronRight size={16} color={C.textMuted} style={{ flexShrink: 0 }} />
-          </button>
+            <button onClick={() => onToggleFavorite(i)} style={{
+              width: 30, height: 30, borderRadius: 9, border: `1px solid ${c.favorite ? C.red : C.border}`,
+              background: c.favorite ? C.redDeep : C.cardAlt, display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer", flexShrink: 0
+            }}>
+              <Star size={14} color={c.favorite ? C.red : C.textMuted} fill={c.favorite ? C.red : "none"} />
+            </button>
+            <button onClick={() => onEditCard(i)} style={{
+              width: 30, height: 30, borderRadius: 9, border: `1px solid ${C.border}`,
+              background: C.cardAlt, display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer", flexShrink: 0
+            }}>
+              <Pencil size={13} color={C.textMuted} />
+            </button>
+          </div>
         ))
       )}
-      <button onClick={onAddCard} style={{
-        width: "100%", padding: "11px", borderRadius: 12, border: `1px solid ${C.border}`,
-        background: "transparent", color: C.redSoft, fontFamily: "'Inter', sans-serif",
-        fontWeight: 500, fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-        cursor: "pointer"
-      }}><Plus size={14} /> Agregar tarjeta</button>
+      {hasBank ? (
+        <button onClick={() => setShowAssocPopup(true)} style={{
+          width: "100%", padding: "11px", borderRadius: 12, border: `1px solid ${C.border}`,
+          background: "transparent", color: C.redSoft, fontFamily: "'Inter', sans-serif",
+          fontWeight: 500, fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+          cursor: "pointer"
+        }}><Plus size={14} /> Agregar tarjeta</button>
+      ) : (
+        <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 11.5, color: C.textMuted, textAlign: "center", margin: 0, lineHeight: 1.5 }}>
+          Primero vincula tu cuenta CLABE para poder agregar una tarjeta de cobro.
+        </p>
+      )}
+
+      {showAssocPopup && hasBank && (
+        <div
+          onClick={() => setShowAssocPopup(false)}
+          style={{
+            position: "absolute", inset: 0, background: "rgba(27,26,20,0.45)",
+            display: "flex", alignItems: "center", justifyContent: "center", padding: "0 28px", zIndex: 70
+          }}
+        >
+          <div onClick={e => e.stopPropagation()} style={{
+            width: "100%", maxWidth: 320, background: C.card, borderRadius: 20,
+            padding: "22px 20px", boxShadow: "0 24px 60px rgba(0,0,0,0.28)"
+          }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 12, background: C.greenDeeper,
+              display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14
+            }}>
+              <Landmark size={20} color={C.greenSoft} />
+            </div>
+            <p style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 15, color: C.text, margin: "0 0 8px" }}>
+              Tarjeta asociada a tu cuenta CLABE
+            </p>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: C.textMuted, margin: "0 0 20px", lineHeight: 1.5 }}>
+              Esta tarjeta queda asociada a tu cuenta CLABE de <b>{bankAccounts[0].bank}</b> terminación <b>{bankAccounts[0].clabe.slice(-4)}</b>, a nombre de {bankAccounts[0].holder}.
+            </p>
+            <PrimaryButton onClick={() => { setShowAssocPopup(false); onAddCard(); }}>
+              Entendido, continuar
+            </PrimaryButton>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1071,16 +1158,17 @@ function BankPickerSheet({ open, selected, onSelect, onClose }) {
   );
 }
 
-function ScreenAddBank({ userName, onBack, onSubmit }) {
-  const [clabe, setClabe] = useState("");
-  const [holder, setHolder] = useState("");
-  const [bank, setBank] = useState("");
+function ScreenAddBank({ userName, initial, onBack, onSubmit }) {
+  const isEdit = !!initial;
+  const [clabe, setClabe] = useState(initial?.clabe || "");
+  const [holder, setHolder] = useState(initial?.holder || userName || "");
+  const [bank, setBank] = useState(initial?.bank || "");
   const [pickerOpen, setPickerOpen] = useState(false);
   const valid = clabe.length === 18 && holder.trim().length > 2 && bank !== "";
 
   return (
     <div style={{ padding: "8px 24px 28px", display: "flex", flexDirection: "column", height: "100%", position: "relative" }}>
-      <TopNav title="Agregar cuenta" onBack={onBack} />
+      <TopNav title={isEdit ? "Editar cuenta" : "Agregar cuenta"} onBack={onBack} />
       <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: C.textMuted, margin: "6px 0 20px", lineHeight: 1.5 }}>
         Ingresa tu CLABE interbancaria, la referencia única de 18 dígitos con la que te podrán depositar dinero desde cualquier banco.
       </p>
@@ -1090,8 +1178,11 @@ function ScreenAddBank({ userName, onBack, onSubmit }) {
         placeholder="Como aparece en tu cuenta bancaria"
         value={holder}
         onChange={e => setHolder(e.target.value.toUpperCase())}
-        style={{ fontFamily: "'Inter', sans-serif", letterSpacing: 0.3, marginBottom: 16 }}
+        style={{ fontFamily: "'Inter', sans-serif", letterSpacing: 0.3, marginBottom: 6 }}
       />
+      <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: C.textMuted, margin: "0 0 16px" }}>
+        Tomamos tu nombre del registro. Puedes editarlo si tu cuenta bancaria está a nombre de alguien más.
+      </p>
 
       <FieldLabel>Banco</FieldLabel>
       <button
@@ -1124,7 +1215,7 @@ function ScreenAddBank({ userName, onBack, onSubmit }) {
 
       <div style={{ flex: 1 }} />
       <PrimaryButton disabled={!valid} onClick={() => onSubmit({ clabe, bank, holder })}>
-        Vincular cuenta <Check size={15} />
+        {isEdit ? "Guardar cambios" : "Vincular cuenta"} <Check size={15} />
       </PrimaryButton>
 
       <BankPickerSheet open={pickerOpen} selected={bank} onSelect={setBank} onClose={() => setPickerOpen(false)} />
@@ -1132,12 +1223,12 @@ function ScreenAddBank({ userName, onBack, onSubmit }) {
   );
 }
 
-function ScreenAddCard({ initial, onBack, onSubmit }) {
+function ScreenAddCard({ initial, linkedAccount, onBack, onSubmit }) {
   const isEdit = !!initial;
   const [number, setNumber] = useState(initial?.number || "");
   const [expiry, setExpiry] = useState(initial?.expiry || "");
   const [cvv, setCvv] = useState(initial?.cvv || "");
-  const [holder, setHolder] = useState(initial?.holder || "");
+  const holder = linkedAccount?.holder || initial?.holder || "";
   const [favorite, setFavorite] = useState(initial?.favorite || false);
   const brand = cardBrand(number);
   const valid = number.length === 16 && expiry.length === 5 && cvv.length === 3 && holder.trim().length > 2;
@@ -1147,25 +1238,27 @@ function ScreenAddCard({ initial, onBack, onSubmit }) {
       <TopNav title={isEdit ? "Editar tarjeta" : "Agregar tarjeta"} onBack={onBack} />
 
       <div style={{
-        position: "relative", overflow: "hidden", borderRadius: 18, padding: "20px 20px 18px",
+        position: "relative", overflow: "hidden", borderRadius: 18,
+        width: "100%", aspectRatio: "1.586", padding: "18px 20px",
         background: `linear-gradient(135deg, #4A2A34 0%, #7A4655 50%, #B5677A 100%)`,
-        margin: "10px 0 24px"
+        margin: "10px 0 24px", display: "flex", flexDirection: "column", justifyContent: "space-between",
+        boxSizing: "border-box"
       }}>
         <svg width="140" height="140" viewBox="0 0 140 140" style={{ position: "absolute", top: -20, right: -30, opacity: 0.2 }}>
           <circle cx="70" cy="70" r="69" fill="none" stroke="#fff" strokeWidth="0.7" />
           <circle cx="70" cy="70" r="50" fill="none" stroke="#fff" strokeWidth="0.7" />
         </svg>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 26 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative" }}>
           <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 13, color: "#FFD9D5", letterSpacing: 1 }}>ferio</span>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             {favorite && <Star size={13} color="#FFD9D5" fill="#FFD9D5" />}
             <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 13, color: "#fff" }}>{brand}</span>
           </div>
         </div>
-        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 18, color: "#fff", letterSpacing: 2, margin: "0 0 18px" }}>
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 18, color: "#fff", letterSpacing: 2, margin: 0, position: "relative" }}>
           {maskCardNumber(number) || "•••• •••• •••• ••••"}
         </p>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", position: "relative" }}>
           <div>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "#FFB7B0", margin: "0 0 2px" }}>TITULAR</p>
             <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, color: "#fff", margin: 0 }}>{holder || "NOMBRE APELLIDO"}</p>
@@ -1210,25 +1303,13 @@ function ScreenAddCard({ initial, onBack, onSubmit }) {
 
       <FieldLabel>Nombre del titular</FieldLabel>
       <TextInput
-        placeholder="Como aparece en la tarjeta"
         value={holder}
-        onChange={e => setHolder(e.target.value.toUpperCase())}
-        style={{ fontFamily: "'Inter', sans-serif", letterSpacing: 0.3, marginBottom: 18 }}
+        disabled
+        style={{ fontFamily: "'Inter', sans-serif", letterSpacing: 0.3, marginBottom: 6, color: C.textMuted }}
       />
-
-      <button
-        onClick={() => setFavorite(f => !f)}
-        style={{
-          display: "flex", alignItems: "center", gap: 10, padding: "13px 14px",
-          borderRadius: 12, border: `1px solid ${favorite ? C.red : C.border}`,
-          background: favorite ? C.redDeep : C.card, cursor: "pointer", marginBottom: 8
-        }}
-      >
-        <Star size={16} color={favorite ? C.red : C.textMuted} fill={favorite ? C.red : "none"} />
-        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: C.text, fontWeight: 500, textAlign: "left" }}>
-          Marcar como método de pago favorito
-        </span>
-      </button>
+      <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: C.textMuted, margin: "0 0 18px" }}>
+        Debe coincidir con el titular de tu cuenta CLABE.
+      </p>
 
       <div style={{ display: "flex", alignItems: "center", gap: 8, margin: "10px 0 18px" }}>
         <Lock size={13} color={C.textMuted} />
@@ -1541,7 +1622,7 @@ function ReceiptOverlay({ open, onClose, tx, senderName }) {
           }}>
             <div style={{
               position: "absolute", top: 34, right: -34, transform: "rotate(28deg)",
-              border: `2.5px solid ${C.red}`, color: C.red, padding: "4px 40px",
+              border: "2.5px solid #2F9E5B", color: "#2F9E5B", padding: "4px 40px",
               fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 13, letterSpacing: 2
             }}>PAGADO</div>
 
@@ -1627,6 +1708,7 @@ export default function FerioApp() {
   const [tx, setTx] = useState(null);
 
   const [bankAccounts, setBankAccounts] = useState([]);
+  const [editingBank, setEditingBank] = useState(false);
   const [cards, setCards] = useState([]);
   const [editingCardIndex, setEditingCardIndex] = useState(null);
 
@@ -1674,27 +1756,30 @@ export default function FerioApp() {
 
   let body = null;
   if (screen === "splash") {
-    body = <ScreenSplash onNext={() => setScreen("register")} />;
-  } else if (screen === "register") {
+    body = <ScreenSplash onNext={() => setScreen("registerName")} />;
+  } else if (screen === "registerName") {
     body = (
-      <ScreenRegister
-        phone={regPhone}
-        setPhone={setRegPhone}
+      <ScreenRegisterName
         nombre={nombre} setNombre={setNombre}
         apPaterno={apPaterno} setApPaterno={setApPaterno}
         apMaterno={apMaterno} setApMaterno={setApMaterno}
+        onContinue={() => setScreen("registerPhone")}
+      />
+    );
+  } else if (screen === "registerPhone") {
+    body = (
+      <ScreenRegisterPhone
+        phone={regPhone}
+        setPhone={setRegPhone}
         onContinue={() => setScreen("otp")}
-        onGoogle={() => { setAuthNote("Sesión iniciada con Google. Ahora completa tus datos para terminar tu registro."); setRegPhone(""); setScreen("forcePhone"); }}
-        onEmail={() => { setAuthNote("Sesión iniciada con correo. Ahora completa tus datos para terminar tu registro."); setRegPhone(""); setScreen("forcePhone"); }}
+        onGoogle={() => { setAuthNote("Sesión iniciada con Google. Ahora confirma tu número celular para terminar tu registro."); setRegPhone(""); setScreen("forcePhone"); }}
+        onEmail={() => { setAuthNote("Sesión iniciada con correo. Ahora confirma tu número celular para terminar tu registro."); setRegPhone(""); setScreen("forcePhone"); }}
       />
     );
   } else if (screen === "forcePhone") {
     body = (
       <ScreenForcePhone
         phone={regPhone} setPhone={setRegPhone}
-        nombre={nombre} setNombre={setNombre}
-        apPaterno={apPaterno} setApPaterno={setApPaterno}
-        apMaterno={apMaterno} setApMaterno={setApMaterno}
         onContinue={() => setScreen("otp")}
         note={authNote}
       />
@@ -1743,15 +1828,22 @@ export default function FerioApp() {
   } else if (screen === "receive") {
     body = <ScreenReceive userName={userName} phone={regPhone || "5512345678"} onBack={() => setScreen("home")} />;
   } else if (screen === "profile") {
-    body = <ScreenProfile userName={userName} phone={regPhone || "5512345678"} onBack={() => setScreen("home")} />;
+    const simulatedEmail = nombre && apPaterno
+      ? `${nombre.split(" ")[0].toLowerCase()}.${apPaterno.split(" ")[0].toLowerCase()}@correo.com`
+      : "mariana.torres@correo.com";
+    body = <ScreenProfile userName={userName} phone={regPhone || "5512345678"} email={simulatedEmail} onBack={() => setScreen("home")} />;
   } else if (screen === "cards") {
     body = (
       <ScreenCardsHub
         bankAccounts={bankAccounts}
         cards={cards}
-        onAddBank={() => setScreen("addBank")}
+        onAddBank={() => { setEditingBank(false); setScreen("addBank"); }}
+        onEditBank={() => { setEditingBank(true); setScreen("addBank"); }}
         onAddCard={() => { setEditingCardIndex(null); setScreen("addCard"); }}
         onEditCard={(i) => { setEditingCardIndex(i); setScreen("addCard"); }}
+        onToggleFavorite={(i) => {
+          setCards(cs => cs.map((c, idx) => ({ ...c, favorite: idx === i ? !c.favorite : false })));
+        }}
         onBack={() => setScreen("home")}
       />
     );
@@ -1759,9 +1851,10 @@ export default function FerioApp() {
     body = (
       <ScreenAddBank
         userName={userName}
+        initial={editingBank ? bankAccounts[0] : null}
         onBack={() => setScreen("cards")}
         onSubmit={({ clabe, bank, holder }) => {
-          if (bankAccounts.length === 0) setBankAccounts([{ clabe, bank, holder }]);
+          setBankAccounts([{ clabe, bank, holder }]);
           setScreen("cards");
         }}
       />
@@ -1770,6 +1863,7 @@ export default function FerioApp() {
     body = (
       <ScreenAddCard
         initial={editingCardIndex !== null ? cards[editingCardIndex] : null}
+        linkedAccount={bankAccounts[0] || null}
         onBack={() => setScreen("cards")}
         onSubmit={(card) => {
           setCards(cs => {
